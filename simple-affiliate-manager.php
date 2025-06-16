@@ -31,7 +31,21 @@ spl_autoload_register(function($class) {
 // Load registration handler!
 require_once SAM_PLUGIN_PATH . 'includes/class-registration.php';
 
+require_once SAM_PLUGIN_PATH . 'includes/class-woocommerce-integration.php';
 // Register shortcodes
 add_action('init', function() {
     new SAM_Shortcodes();
+});
+add_action('wp_footer', function() {
+    ?>
+    <script>
+    (function() {
+        var params = new URLSearchParams(window.location.search);
+        if (params.has('ref')) {
+            var ref = params.get('ref');
+            document.cookie = "sam_affiliate_ref=" + encodeURIComponent(ref) + "; path=/; max-age=2592000"; // 30 days
+        }
+    })();
+    </script>
+    <?php
 });
